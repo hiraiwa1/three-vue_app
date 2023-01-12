@@ -1,0 +1,11 @@
+
+body {
+  margin: 0;
+  padding: 0;
+}
+
+#app {
+  position: relative;
+  height: 300vh;
+  width: 100vw;
+}
