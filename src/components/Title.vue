@@ -1,7 +1,8 @@
 <template>
   <div class="title-area">
     <h1>Corder</h1>
-    <p>I am Developer</p>
+    <p>I am Developer<br>
+      scrolling animation.</p>
   </div>
 </template>
 
@@ -25,6 +26,7 @@ p {
   margin: 0;
   font-size: 1.5rem;
   padding-left: 1em;
+  line-height: 1.2em;
   color: #888;
   text-shadow: 1px 1px 0 #222;
 }
@@ -37,6 +39,10 @@ p {
   h1 {
     font-size: 6rem;
     border-bottom: 1px solid #555;
+  }
+  p {
+    margin-top: 0.5em;
+
   }
 }
 </style>

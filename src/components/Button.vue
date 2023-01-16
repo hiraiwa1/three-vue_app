@@ -2,12 +2,17 @@
 
 const clearInit = (): void => {
   location.reload();
+  window.scrollTo(scrollOption);
+}
+
+const scrollOption: object = {
+  top: 0
 }
 </script>
 
 <template>
   <button v-on:click="clearInit">
-    リロード。
+    初期の場所に戻る。
   </button>
 </template>
 
@@ -26,6 +31,9 @@ button {
   border-top-color: #fff;
   border-right-color: #818181;
   border-bottom-color: #818181;
+  font-weight: 500;
+  font-family: sans-serif;
+  font-size: 0.8rem;
 }
 button:hover {
   cursor: pointer;

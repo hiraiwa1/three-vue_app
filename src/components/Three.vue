@@ -31,7 +31,7 @@ const init = () => {
     // sphere = createSphere();
     // // sphere.position.set(0, 5, 5)
     // scene.add(sphere);
-    torus = createTorus();
+    torus = creatTorus();
     torus.position.set(0, -10, 0)
     torus.rotation.x = -Math.PI * 0.45;
     scene.add( torus );
@@ -71,20 +71,22 @@ const createBox = () => {
   const material = new MeshLambertMaterial({ color: 0x60a576 })
   return new Mesh(geometry, material);
 }
-const createTorus = () => {
+const creatTorus = () => {
   const geometry = new TorusGeometry( 10, 3, 20, 10 );
   const material = new MeshLambertMaterial( { color: 0x1495ff } );
   return new Mesh( geometry, material );
 }
+
+const radian = Math.PI / 180;
 
 const glafLoader = new GLTFLoader();
 glafLoader.load("/models/animation.gltf", (gltf) => {
   model = gltf.scene;
   model.position.set(14, -6.5, 9)
   model.scale.set(2, 2, 2);
-  model.rotation.y = -Math.PI / 12;
+  // model.rotation.y = -Math.PI / 12;
+  model.rotation.y = Math.tan(1 * radian);
   model.rotation.x = 0.2;
-
   scene.add(model);
 
   mixer = new AnimationMixer(model);
@@ -92,17 +94,15 @@ glafLoader.load("/models/animation.gltf", (gltf) => {
   // console.log(clips);
   clips.forEach(clip => {
     const action = mixer.clipAction(clip);
-    action.reset()
-      .setEffectiveTimeScale( 1 )
-      .setEffectiveWeight( 1 )
-      .fadeIn( 0.5 )
-      .play();
+    action.play();
   })
 })
 
 
 const animationScripts = [];
-
+let rot = 1;
+const MODEL_FORWARD = 1;
+const MODEL_BACKWARD = 71;
 animationScripts.push(
   {
   direction: 'init',
@@ -112,16 +112,26 @@ animationScripts.push(
 },{
   direction: 'down',
   function() {
-    model.rotation.y = -Math.PI / 12;
 
+    if(rot !== MODEL_FORWARD) {
+      rot -= 5;
+      model.rotation.y = Math.tan(rot * radian);
+    } else {
+      model.rotation.y = Math.tan(MODEL_FORWARD * radian);
+    }
   }
 },{
   direction: 'up',
   function() {
-    // box.rotation.x -= 0.01;
-    // box.rotation.y -= 0.01;
     torus.rotation.z -= 0.03;
-    model.rotation.y = -Math.PI / 1;
+    // model.rotation.y = -Math.PI / 1;
+
+    if(rot !== MODEL_BACKWARD) {
+      rot += 5;
+      model.rotation.y = Math.tan(rot * radian);
+    } else {
+      model.rotation.y = Math.tan(MODEL_BACKWARD * radian);
+    }
   }
 });
 
@@ -138,11 +148,11 @@ document.body.onscroll = () => {
 
 
   if(scrollPosition < document.documentElement.scrollTop) {
-    console.log('down')
+    // console.log('down')
     scrollDirection.down = true;
     scrollDirection.up = false;
   } else {
-    console.log('up')
+    // console.log('up')
     scrollDirection.down = false;
     scrollDirection.up = true;
   };
@@ -171,6 +181,12 @@ onMounted(() => {
 });
 
 function playScrollAnimation() {
+  // rot += 0.05;
+  // let radian = rot * (Math.PI / 180);
+  // // console.log(Math.PI / 180)
+  // // console.log(radian)
+  // // console.log(Math.sin(radian))
+
   animationScripts.forEach(animation => {
     if(animation.direction === 'init') {
       animation.function();
@@ -186,7 +202,6 @@ function playScrollAnimation() {
 
 <template>
   <div ref="container" class="fullcanvas"></div>
-  <p class="credit_text">This work is based on <a href="https://sketchfab.com/3d-models/jake-the-dog-adventure-time-fan-art-1a58f2fb304a4c5da8900c2d0afced49" target="_blank">"Jake the Dog - Adventure Time (Fan art)"</a>  by <a href="https://sketchfab.com/TH3WICK3D1" target="_blank">TH3WICK3D1</a> <a href="http://creativecommons.org/licenses/by/4.0/" target="_blank">licensed under CC-BY-4.0</a></p>
 </template>
 
 <style scoped>
@@ -198,17 +213,5 @@ function playScrollAnimation() {
   left: 0;
   width: 100%;
   height: 100%;
-}
-.credit_text {
-  position: fixed;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  text-align: center;
-  font-size: 0.8rem;
-  color: cornsilk;
-}
-.credit_text a {
-  color: cornsilk;
 }
 </style>
