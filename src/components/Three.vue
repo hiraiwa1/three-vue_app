@@ -1,7 +1,7 @@
 
 <script setup>
 import { defineComponent, onMounted, ref } from "vue";
-import { GridHelper, TorusGeometry, Mesh, MeshLambertMaterial, PerspectiveCamera, PointLight, Scene, SphereGeometry, BoxGeometry, WebGLRenderer, CameraHelper, AnimationMixer } from "three";
+import { GridHelper, TorusGeometry, Mesh, MeshLambertMaterial, PerspectiveCamera, AmbientLight, PointLight, PointLightHelper, Scene, SphereGeometry, BoxGeometry, WebGLRenderer, CameraHelper, AnimationMixer } from "three";
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
 
 const container = ref();
@@ -12,7 +12,9 @@ const renderer = new WebGLRenderer({
   antialias: true,
   alpha: true
 });
-const light = new PointLight();
+const light = new AmbientLight( 0x303030, 0.8 );
+
+const pointLight = new PointLight();
 let sphere, box, torus, model, mixer;
 
 const init = () => {
@@ -23,15 +25,21 @@ const init = () => {
     // scene.add(new GridHelper());
 
     /* ライトの設定 */
-    light.color.setHex(0xffffff);
-    light.position.set(60, 50, 80);
-    scene.add(light);
+    scene.add( light );
+
+    pointLight.color.setHex(0xffffff);
+    pointLight.position.set(43, 50, 60);
+    scene.add(pointLight);
+
+    // const sphereSize = 3;
+    // const pointLightHelper = new PointLightHelper( pointLight, sphereSize );
+    // scene.add( pointLightHelper );
 
     /* 球体 */
     // sphere = createSphere();
     // // sphere.position.set(0, 5, 5)
     // scene.add(sphere);
-    torus = creatTorus();
+    torus = createTorus();
     torus.position.set(0, -10, 0)
     torus.rotation.x = -Math.PI * 0.45;
     scene.add( torus );
@@ -71,7 +79,7 @@ const createBox = () => {
   const material = new MeshLambertMaterial({ color: 0x60a576 })
   return new Mesh(geometry, material);
 }
-const creatTorus = () => {
+const createTorus = () => {
   const geometry = new TorusGeometry( 10, 3, 20, 10 );
   const material = new MeshLambertMaterial( { color: 0x1495ff } );
   return new Mesh( geometry, material );
